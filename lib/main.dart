@@ -1,54 +1,60 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_codelab/local_notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:telephony/telephony.dart';
+import 'package:workmanager/workmanager.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+const taskName = 'task';
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-  runApp(MyApp());
+void callbackDispatcher() {
+  Workmanager().executeTask((taskName, inputData) {
+    print("SMS: WORKER MANAGER CALLED");
+    final Telephony telephony = Telephony.backgroundInstance;
+    telephony.listenIncomingSms(
+        onNewMessage: (SmsMessage message) {
+          print("SMS: Reading ... Foreground ...");
+          print(message.address);
+          print(message.body);
+          print(message.date);
+          LocalNotification.showNotification(
+              title: 'Forwarder',
+              body: 'Reading SMS Foreground',
+              flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
+        },
+        listenInBackground: true,
+        onBackgroundMessage: backgrounMessageHandler);
+    return Future.value(true);
+  });
 }
 
-Future<void> initializeService() async {
-  final service = FlutterBackgroundService();
-
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-        onStart: onAndroidStart,
-        autoStart: true,
-        isForegroundMode: true,
-        foregroundServiceNotificationContent: 'SMS Reading mode ON.',
-        foregroundServiceNotificationTitle: 'Forwarder'),
-    iosConfiguration: IosConfiguration(
-        onForeground: onIOSForeground, onBackground: onIOSBackground),
-  );
-  service.start();
-}
-
-void backgrounMessageHandler(SmsMessage message) async {
-  print("SMS reading ... Background ...");
+backgrounMessageHandler(SmsMessage message) async {
+  print("SMS: Reading ... Background I think ...");
   print(message.address);
   print(message.body);
   print(message.date);
+  LocalNotification.showNotification(
+      title: 'Forwarder',
+      body: 'Reading SMS Background',
+      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
 }
 
-void onAndroidStart() {
-  print("SMS reading ... Terminated ...");
-  Telephony telephony = Telephony.instance;
-  telephony.listenIncomingSms(
-      onNewMessage: (SmsMessage message) {
-        print("SMS reading ... Foreground ...");
-        print(message.address);
-        print(message.body);
-        print(message.date);
-      },
-      listenInBackground: true,
-      onBackgroundMessage: backgrounMessageHandler);
+String generateRandomString(int len) {
+  var r = Random();
+  return String.fromCharCodes(
+      List.generate(len, (index) => r.nextInt(33) + 89));
 }
 
-void onIOSForeground() {}
-
-void onIOSBackground() {}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().registerOneOffTask(generateRandomString(10), "task",
+      initialDelay: Duration(seconds: 10));
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -68,6 +74,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    LocalNotification.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override

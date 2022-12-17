@@ -32,6 +32,10 @@ dependencies:
   telephony: ^0.1.4
   flutter_background_service: ^0.2.6
   flutter_local_notifications: ^9.5.3+1
+  device_info_plus: ^4.0.0
+  shared_preferences: ^2.0.7
+  flutter_background: ^1.1.0
+  workmanager: ^0.4.1
 
 dev_dependencies:
   flutter_test:

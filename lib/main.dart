@@ -10,17 +10,19 @@ Future<void> main() async {
 }
 
 Future<void> initializeService() async {
-
   final service = FlutterBackgroundService();
+
   await service.configure(
     androidConfiguration: AndroidConfiguration(
-      onStart: onAndroidStart,
-      autoStart: true,
-      isForegroundMode: false,
-    ),
+        onStart: onAndroidStart,
+        autoStart: true,
+        isForegroundMode: true,
+        foregroundServiceNotificationContent: 'SMS Reading mode ON.',
+        foregroundServiceNotificationTitle: 'Forwarder'),
     iosConfiguration: IosConfiguration(
         onForeground: onIOSForeground, onBackground: onIOSBackground),
   );
+  service.start();
 }
 
 void backgrounMessageHandler(SmsMessage message) async {
@@ -33,7 +35,6 @@ void backgrounMessageHandler(SmsMessage message) async {
 void onAndroidStart() {
   print("SMS reading ... Terminated ...");
   Telephony telephony = Telephony.instance;
-
   telephony.listenIncomingSms(
       onNewMessage: (SmsMessage message) {
         print("SMS reading ... Foreground ...");

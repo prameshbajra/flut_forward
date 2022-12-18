@@ -4,7 +4,7 @@ class LocalNotification {
   static Future initialize(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     var androidInitialize =
-        new AndroidInitializationSettings('mipmap/ic_launcher');
+        new AndroidInitializationSettings('mipmap/forwarder_launcher_icon');
     var iosInitialize = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         android: androidInitialize, iOS: iosInitialize);

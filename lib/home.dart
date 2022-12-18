@@ -15,7 +15,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Listen Incoming SMS in Flutter"),
+          title: Text("Forwarder"),
           backgroundColor: Colors.redAccent),
       body: Padding(
         padding: EdgeInsets.all(16.0),

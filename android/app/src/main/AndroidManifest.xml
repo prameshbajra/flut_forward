@@ -9,8 +9,8 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
    <application
-        android:label="flutter_codelab"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Forwarder"
+        android:icon="@mipmap/forwarder_launcher_icon">
 
         <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
 		      android:permission="android.permission.BROADCAST_SMS" android:exported="true">

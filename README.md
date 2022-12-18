@@ -1,6 +1,9 @@
 # flut_forward
 
-Getting started
+A simple app that reads the incoming messages in the background and calls LAMBDA.
+
+## How to use ?
+- I have not added the permissions for notification, hence after installing the app you will have to manually go into app info and then grant permissions. However, SMS permissions were relatively easy to do so that thing works.
 
 ## Getting Started
 

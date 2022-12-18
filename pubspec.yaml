@@ -30,6 +30,8 @@ dependencies:
   telephony: ^0.1.4
   flutter_local_notifications: ^9.5.3+1
   workmanager: ^0.4.1
+  http: ^0.13.3
+  permission_handler: ^8.1.6
 
 dev_dependencies:
   flutter_test:

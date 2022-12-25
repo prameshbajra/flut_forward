@@ -32,6 +32,7 @@ dependencies:
   workmanager: ^0.4.1
   http: ^0.13.3
   permission_handler: ^8.1.6
+  device_info_plus: ^4.0.0
 
 dev_dependencies:
   flutter_test:

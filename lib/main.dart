@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_codelab/home.dart';
 import 'package:flutter_codelab/local_notification.dart';
@@ -30,10 +32,15 @@ void callbackDispatcher() {
 }
 
 backgrounMessageHandler(SmsMessage message) async {
-  var url =
-      Uri.https('run.mocky.io', '/v3/f3fcaeba-c5da-485a-bed4-4f71e123cbba');
-  var response = await http.get(url);
-  print('FOWARDER: ${response.body}');
+  Map<String, String?> body = {
+    'sender_address': message.address,
+    'receiver_address': '+9779813457822',
+    'message': message.body
+  };
+  var url = Uri.parse(
+      'https://pdzzplykb4o36pyfx7um2o7rpu0qpwwt.lambda-url.ap-south-1.on.aws');
+  final headers = {'Content-Type': 'application/json'};
+  await http.post(url, headers: headers, body: json.encode(body));
   LocalNotification.showNotification(
       title: 'Forwarder Background.',
       body: 'Address: ${message.address} | Body: ${message.body}',
@@ -49,7 +56,7 @@ void main() async {
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   await Workmanager()
       .registerOneOffTask(Utility().generateRandomString(10), taskName);
-  
+
   runApp(MyApp());
 }
 
